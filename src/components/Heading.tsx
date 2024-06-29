@@ -16,17 +16,14 @@ const Heading = () => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav">
-                    <a className="nav-link active" href="#">Timed<FontAwesomeIcon icon={faClock} className="nav-icons"/></a>
-                    <a className="nav-link" href="#">Clicks<FontAwesomeIcon icon={faArrowPointer} className="nav-icons"/></a>
-                    <a className="nav-link" href="#">Competitive<FontAwesomeIcon icon={faCrosshairs} className="nav-icons"/></a>
-                    <a className="nav-link" href="#">About</a>
+                    <a className="nav-link active" onClick={() => {}}>Timed<FontAwesomeIcon icon={faClock} className="nav-icons"/></a>
+                    <a className="nav-link">Clicks<FontAwesomeIcon icon={faArrowPointer} className="nav-icons"/></a>
+                    <a className="nav-link">Competitive<FontAwesomeIcon icon={faCrosshairs} className="nav-icons"/></a>
+                    <a className="nav-link">About</a>
                 </div>
                 </div>
             </div>
             </nav>
-            <a className="nav-link" href="#">Speed</a>
-            <a className="nav-link" href="#">Tracking</a>
-            <a className="nav-link" href="#">Flicking</a>
         </header>
     );
 }

@@ -1,35 +1,103 @@
 import ClickBox from "./components/ClickBox"
 import Heading from "./components/Heading";
 import Controls from "./components/Controls";
-import { useState } from "react";
+import { useState, useEffect, useRef} from "react";
+
+type measureMode = "Timed" | "Clicks";
 
 function App() {
+  const [isRunning, setIsRunning] = useState(false);
+  const [measureMode, setMeasureMode] = useState<measureMode>("Timed");
+  const [mode, setMode] = useState("Speed");
+  const [score, setScore] = useState(0);
+  const [measureRemaining, setMeasureRemaining] = useState(0);
+  const timeGiven = 3;
+  const clicksGiven = 100;
+  const scoreRef = useRef(score);
+  const [cps, setCps] = useState(0);
+  const cpsRef = useRef(cps);
 
-    const [mode, setMode] = useState("Speed");
-    const modeSwitch = (mode: "Speed" | "Tracking" | "Flicking") => {
-        setMode(mode);
+  useEffect(() => {
+    scoreRef.current = score;
+    cpsRef.current = cps;
+  }, [score, cps]);
+  
+  useEffect(() => {
+    if (isRunning){
+      const timeStart = Date.now();
+      if (measureMode === "Timed"){
+        const timedCountdown = setInterval(() => {
+        const timeElapsed = Math.floor((Date.now() - timeStart)/1000);
+        const newMeasureRemaining = timeGiven - timeElapsed;
+        if (newMeasureRemaining >= 0){
+          setMeasureRemaining(newMeasureRemaining);
+        } else{
+          scoreFinalize();
+          clearInterval(timedCountdown);
+          setIsRunning(false);
+        }
+        }, 1000);
+      } else if(measureMode === "Clicks"){
+        //const timeCount = setTimeout
+      }
     }
+  }, [isRunning])
 
-    const [score, setScore] = useState(0);
-    const boxClicked = () => {
+  const scoreFinalize = () => {
+    if (measureMode === "Timed"){
+      const calculatedCps = Math.round((scoreRef.current/timeGiven) * 100) / 100;
+      setCps(calculatedCps);
+      console.log(`Your score: ${scoreRef.current} Your cps: ${calculatedCps}`);
+      // Add to personal leaderboard (MUCH LATER)
+    }
+    
+  };
+
+  const isRunningSwitch = (isRunningParam: boolean) => {
+    setIsRunning(isRunningParam);
+    setScore(0);
+    if (measureMode === "Timed"){
+      setMeasureRemaining(timeGiven);
+    } else if(measureMode === "Clicks"){
+      setMeasureRemaining(clicksGiven);
+    }
+  };
+  
+  const measureSwitch = (measure: "Timed" | "Clicks") => {
+    setMeasureMode(measure);
+  };
+
+  
+  const modeSwitch = (mode: "Speed" | "Tracking" | "Flicking") => {
+    setMode(mode);
+  };
+
+  const boxClicked = () => {
+    if (!isRunning){
+      isRunningSwitch(true);
+    } else{
       switch(mode){
         case "Speed": {
           setScore(score + 1);
           break;
         }
         default: {
-          setScore(score + 1); //Later change 
+          setScore(score + 1); //Adding more cases (Later)
         }
       }
+      if(measureMode === "Clicks"){
+        setMeasureRemaining(measureRemaining - 1);
+      }
     }
+  };
 
-    return (
-      <>
-        <Heading />
-        <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType="Timed" measureRemaining={5}/>
-        <ClickBox visible={true} clicked={boxClicked}/>
-      </>
-    );
+  return (
+    <>
+      <Heading measureSwitch={measureSwitch}/>
+      <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType={measureMode} measureRemaining={measureRemaining} cps={cps}/>
+      <ClickBox visible={true} clicked={boxClicked}/>
+    </>
+  );
 }
 
 export default App

@@ -5,7 +5,11 @@ import { faClock } from '@fortawesome/free-solid-svg-icons';
 import { faArrowPointer } from '@fortawesome/free-solid-svg-icons';
 import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
-const Heading = () => {
+interface headingProps{
+    measureSwitch: (measure: "Timed" | "Clicks") => void;
+}
+
+const Heading = ({measureSwitch}: headingProps) => {
     return (
         <header>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -16,8 +20,8 @@ const Heading = () => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav">
-                    <a className="nav-link active" onClick={() => {}}>Timed<FontAwesomeIcon icon={faClock} className="nav-icons"/></a>
-                    <a className="nav-link">Clicks<FontAwesomeIcon icon={faArrowPointer} className="nav-icons"/></a>
+                    <a className="nav-link active" onClick={() => {measureSwitch("Timed")}}>Timed<FontAwesomeIcon icon={faClock} className="nav-icons"/></a>
+                    <a className="nav-link" onClick={() => {measureSwitch("Clicks")}}>Clicks<FontAwesomeIcon icon={faArrowPointer} className="nav-icons"/></a>
                     <a className="nav-link">Competitive<FontAwesomeIcon icon={faCrosshairs} className="nav-icons"/></a>
                     <a className="nav-link">About</a>
                 </div>

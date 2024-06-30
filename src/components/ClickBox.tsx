@@ -5,11 +5,11 @@ interface clickBoxProps{
 }
 
 const ClickBox = ({visible, clicked}: clickBoxProps) => {
-    if (visible){
-        return (
-            <div className="click-box" onClick={clicked} />
-        )
-    }
-}
+    if (!visible) return null;
+
+    return (
+        <div className="click-box" onClick={clicked}>Click Here To Start</div>
+    )
+};
 
 export default ClickBox

@@ -15,12 +15,10 @@ function App() {
   const clicksGiven = 100;
   const scoreRef = useRef(score);
   const [cps, setCps] = useState(0);
-  const cpsRef = useRef(cps);
 
   useEffect(() => {
     scoreRef.current = score;
-    cpsRef.current = cps;
-  }, [score, cps]);
+  }, [score]);
   
   useEffect(() => {
     if (isRunning){
@@ -43,11 +41,14 @@ function App() {
     }
   }, [isRunning])
 
+  const calcCPS = () =>{
+    return (Math.round((scoreRef.current/timeGiven) * 100) / 100);
+  }
+
   const scoreFinalize = () => {
     if (measureMode === "Timed"){
-      const calculatedCps = Math.round((scoreRef.current/timeGiven) * 100) / 100;
-      setCps(calculatedCps);
-      console.log(`Your score: ${scoreRef.current} Your cps: ${calculatedCps}`);
+      setCps(calcCPS());
+      console.log(`Your score: ${scoreRef.current} Your cps: ${calcCPS()}`);
       // Add to personal leaderboard (MUCH LATER)
     }
     
@@ -94,7 +95,7 @@ function App() {
   return (
     <>
       <Heading measureSwitch={measureSwitch}/>
-      <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType={measureMode} measureRemaining={measureRemaining} cps={cps}/>
+      <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType={measureMode} measureRemaining={measureRemaining} cps={cps} isRunning={isRunning}/>
       <ClickBox visible={true} clicked={boxClicked}/>
     </>
   );

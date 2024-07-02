@@ -38,7 +38,7 @@ const Controls = ({visible, score, modeSwitch, measureType, measureRemaining, cp
             <div>
                 <p className="liveScore">Current Score: {score} | {measureText}</p>
             </div>
-            <div className="no-display">Result: {score} | {measureText} | CPS: {cps}</div>
+            <div className="no-display">Result: {score} | {measureText} | CPS: {cps} {isRunning}</div>
         </div>
     )
 };

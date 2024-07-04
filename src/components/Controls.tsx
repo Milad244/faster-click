@@ -6,18 +6,19 @@ interface controlsProps{
     modeSwitch: (mode: "Speed" | "Tracking" | "Flicking") => void;
     measureType: "Timed" | "Clicks";
     measureRemaining: number;
+    measureRemaining2: number;
     cps: number;
     isRunning: boolean;
 }
 
-const Controls = ({visible, score, modeSwitch, measureType, measureRemaining, cps, isRunning}: controlsProps) => {
+const Controls = ({visible, score, modeSwitch, measureType, measureRemaining, measureRemaining2, cps, isRunning}: controlsProps) => {
     if (!visible) return null;
 
     let measureText;
     if (measureType === "Timed"){
-        measureText = `Time left: ${measureRemaining} Seconds`;
+        measureText = `Time left: ${parseFloat(measureRemaining.toFixed(2)).toFixed(2)} Seconds`;
     } else{
-        measureText = `Clicks left: ${measureRemaining} Time taken: `;
+        measureText = `Clicks left: ${measureRemaining} Time taken: ${parseFloat(measureRemaining2.toFixed(2)).toFixed(2)}`;
     }
 
     return (

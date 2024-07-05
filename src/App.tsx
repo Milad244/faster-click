@@ -1,6 +1,7 @@
 import ClickBox from "./components/ClickBox"
 import Heading from "./components/Heading";
 import Controls from "./components/Controls";
+import Result from "./components/Result";
 import { useState, useEffect, useRef} from "react";
 
 type measureMode = "Timed" | "Clicks";
@@ -19,6 +20,11 @@ function App() {
   const clickCount = useRef(0);
   const scoreRef = useRef(score);
   const [cps, setCps] = useState(0);
+  const [resultVisible, setResultVisible] = useState(false);
+
+  useEffect(() => {
+    setDefaultValues();
+  }, [measureMode])
 
   useEffect(() => {
     scoreRef.current = score;
@@ -37,7 +43,7 @@ function App() {
       const timeStart = Date.now();
       if (measureMode === "Timed"){
           const timedCountdown = setInterval(() => {
-            const timeElapsed = Number(((Date.now() - timeStart) / 1000).toFixed(2));
+          const timeElapsed = Number(((Date.now() - timeStart) / 1000).toFixed(2));
           const newMeasureRemaining = timeGiven - timeElapsed;
           if (newMeasureRemaining >= 0){
             setMeasureRemaining(newMeasureRemaining);
@@ -48,7 +54,7 @@ function App() {
         }, 10);
       } else if(measureMode === "Clicks"){
           const timeCount = setInterval(() => {
-            const timeElapsed = Number(((Date.now() - timeStart) / 1000).toFixed(2));
+          const timeElapsed = Number(((Date.now() - timeStart) / 1000).toFixed(2));
           setMeasureRemaining2(timeElapsed);
           if (measureRemainingRef.current <= 0){
             scoreFinalize();
@@ -64,6 +70,10 @@ function App() {
     return (Math.round((clickCount.current/time) * 100) / 100);
   }
 
+  const restart = () => {
+    setResultVisible(false);
+  }
+
   const scoreFinalize = () => {
     if (measureMode === "Timed"){
       const calcedCPS = calcCPS(timeGiven);
@@ -75,11 +85,13 @@ function App() {
       setCps(calcedCPS);
       console.log(`Your score: ${scoreRef.current} Your cps: ${calcedCPS}`);
     }
-    isRunningSwitch(false);
+    setResultVisible(true);
+    setIsRunning(false);
+    setDefaultValues();
   };
 
-  const isRunningSwitch = (isRunningParam: boolean) => {
-    setIsRunning(isRunningParam);
+  const setDefaultValues = () => {
+    setIsRunning(false);
     setScore(0);
     clickCount.current = 0;
     if (measureMode === "Timed"){
@@ -100,7 +112,8 @@ function App() {
 
   const boxClicked = () => {
     if (!isRunning){
-      isRunningSwitch(true);
+      setDefaultValues();
+      setIsRunning(true);
     } else{
       switch(mode){
         case "Speed": {
@@ -129,7 +142,10 @@ function App() {
       <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType={measureMode} 
       measureRemaining={measureRemaining} measureRemaining2={measureRemaining2}
       cps={cps} isRunning={isRunning}/>
-      <ClickBox visible={true} clicked={boxClicked}/>
+      <div className="clickbox-container">
+        <ClickBox visible={true} clicked={boxClicked}/>
+        <Result visible={resultVisible} restart={restart}></Result>
+      </div>
     </>
   );
 }

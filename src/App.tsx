@@ -5,22 +5,30 @@ import Result from "./components/Result";
 import { useState, useEffect, useRef} from "react";
 
 type measureMode = "Timed" | "Clicks";
+type mode = "Speed" | "Tracking" | "Flicking"
 
 function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [measureMode, setMeasureMode] = useState<measureMode>("Timed");
-  const [mode, setMode] = useState("Speed");
+  const [mode, setMode] = useState<mode>("Speed");
   const [score, setScore] = useState(0);
   const [measureRemaining, setMeasureRemaining] = useState(0);
   const measureRemainingRef = useRef(measureRemaining);
   const [measureRemaining2, setMeasureRemaining2] = useState(0);
   const measureRemainingRef2 = useRef(measureRemaining2);
-  const timeGiven = 3;
-  const clicksGiven = 20;
+  const timeGiven = 10;
+  const clicksGiven = 50;
   const clickCount = useRef(0);
   const scoreRef = useRef(score);
   const [cps, setCps] = useState(0);
   const [resultVisible, setResultVisible] = useState(false);
+  const [results, setResults] = useState({
+    measureMode: "" as measureMode,
+    mode: "" as mode,
+    score: 0 as number,
+    cps: 0 as number,
+    resultText: "" as string
+  });
 
   useEffect(() => {
     setDefaultValues();
@@ -70,7 +78,61 @@ function App() {
     return (Math.round((clickCount.current/time) * 100) / 100);
   }
 
-  const restart = () => {
+  const getResultText = (measureMode: measureMode, mode: mode, score: number): string => {
+    if (measureMode === "Timed") {
+        // Timed
+      if (mode === "Speed") {
+        // Timed - Speed
+        if (score >= 100) {
+          return "YOU'RE THE GOAT!!!";
+        }
+        if (score >= 50) {
+          return "WOW THAT SPEED!";
+        }
+        if (score >= 25) {
+          return "Good Job!";
+        }
+        if (score >= 10) {
+          return "Nice!";
+        }
+        return "Meh, you can do better!";
+
+      } else if (mode === "Tracking") {
+        // Timed - Tracking
+        
+      } else if (mode === "Flicking") {
+        // Timed - Flicking
+      }
+    } else if (measureMode === "Clicks") {
+        // Clicks
+      if (mode === "Speed") {
+        // Clicks - Speed
+        if (score >= 100) {
+          return "YOU'RE THE GOAT!!!";
+        }
+        if (score >= 50) {
+          return "WOW THAT SPEED!";
+        }
+        if (score >= 25) {
+          return "Good Job!";
+        }
+        if (score >= 10) {
+          return "Nice!";
+        }
+        return "Meh, you can do better!";
+
+      } else if (mode === "Tracking") {
+        // Clicks - Tracking
+      } else if (mode === "Flicking") {
+        // Clicks - Flicking
+      }
+    }
+  
+    // Default return if no conditions are met (should not happen in a complete implementation)
+    return "";
+  };
+
+  const closeResult = () => {
     setResultVisible(false);
   }
 
@@ -78,12 +140,26 @@ function App() {
     if (measureMode === "Timed"){
       const calcedCPS = calcCPS(timeGiven);
       setCps(calcedCPS);
-      console.log(`Your score: ${scoreRef.current} Your cps: ${calcedCPS}`);
+      const resultText = getResultText(measureMode, mode, scoreRef.current);
+      setResults({
+        measureMode: measureMode,
+        mode: mode,
+        score: scoreRef.current,
+        cps: calcedCPS,
+        resultText: resultText
+      });
       // Add to personal leaderboard (MUCH LATER)
     } else if (measureMode === "Clicks"){
       const calcedCPS = calcCPS(measureRemainingRef2.current);
       setCps(calcedCPS);
-      console.log(`Your score: ${scoreRef.current} Your cps: ${calcedCPS}`);
+      const resultText = getResultText(measureMode, mode, scoreRef.current);
+      setResults({
+        measureMode: measureMode,
+        mode: mode,
+        score: scoreRef.current,
+        cps: calcedCPS,
+        resultText: resultText
+      });
     }
     setResultVisible(true);
     setIsRunning(false);
@@ -144,7 +220,7 @@ function App() {
       cps={cps} isRunning={isRunning}/>
       <div className="clickbox-container">
         <ClickBox visible={true} clicked={boxClicked}/>
-        <Result visible={resultVisible} restart={restart}></Result>
+        <Result visible={resultVisible} closeResult={closeResult} results={results}></Result>
       </div>
     </>
   );

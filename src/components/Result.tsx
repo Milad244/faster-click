@@ -2,8 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef } from "react";
 
-type measureMode = "Timed" | "Clicks";
-type mode = "Speed" | "Tracking" | "Flicking"
+import { measureMode, mode } from '../App';
 
 interface ResultProps{
   visible: boolean;

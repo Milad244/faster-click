@@ -1,10 +1,11 @@
 
+import { measureMode, mode } from '../App';
 
 interface controlsProps{
     visible: boolean;
     score: number;
-    modeSwitch: (mode: "Speed" | "Tracking" | "Flicking") => void;
-    measureType: "Timed" | "Clicks";
+    modeSwitch: (mode: mode) => void;
+    measureType: measureMode;
     measureRemaining: number;
     measureRemaining2: number;
     cps: number;

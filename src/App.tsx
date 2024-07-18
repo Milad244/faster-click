@@ -4,13 +4,15 @@ import Controls from "./components/Controls";
 import Result from "./components/Result";
 import { useState, useEffect, useRef} from "react";
 
-type measureMode = "Timed" | "Clicks";
-type mode = "Speed" | "Tracking" | "Flicking"
+export type measureMode = "Timed" | "Clicks";
+export type mode = "Speed" | "Tracking" | "Flicking";
+export type siteType = "TimedSite" | "ClickSite" | "LeaderboardSite" | "SettingsSite" | "AboutSite";
 
 function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [measureMode, setMeasureMode] = useState<measureMode>("Timed");
   const [mode, setMode] = useState<mode>("Speed");
+  const [siteType, setSiteType] = useState<siteType>("TimedSite");
   const [score, setScore] = useState(0);
   const [measureRemaining, setMeasureRemaining] = useState(0);
   const measureRemainingRef = useRef(measureRemaining);
@@ -177,14 +179,17 @@ function App() {
     }
   };
   
-  const measureSwitch = (measure: "Timed" | "Clicks") => {
+  const measureSwitch = (measure: measureMode) => {
     setMeasureMode(measure);
   };
 
-  
-  const modeSwitch = (mode: "Speed" | "Tracking" | "Flicking") => {
+  const modeSwitch = (mode: mode) => {
     setMode(mode);
   };
+
+  const siteTypeSwitch = (siteType: siteType) => {
+    setSiteType(siteType);
+  }
 
   const boxClicked = () => {
     if (!isRunning){
@@ -211,19 +216,39 @@ function App() {
       }
     }
   };
-
-  return (
-    <>
-      <Heading measureSwitch={measureSwitch}/>
-      <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType={measureMode} 
-      measureRemaining={measureRemaining} measureRemaining2={measureRemaining2}
-      cps={cps} isRunning={isRunning}/>
-      <div className="clickbox-container">
-        <ClickBox visible={true} clicked={boxClicked}/>
-        <Result visible={resultVisible} closeResult={closeResult} results={results}></Result>
-      </div>
-    </>
-  );
+  if (siteType === "ClickSite" || siteType === "TimedSite"){
+    return (
+      <>
+        <Heading measureSwitch={measureSwitch} siteTypeSwitch={siteTypeSwitch}/>
+        <Controls visible={true} score={score} modeSwitch={modeSwitch} measureType={measureMode} 
+        measureRemaining={measureRemaining} measureRemaining2={measureRemaining2}
+        cps={cps} isRunning={isRunning}/>
+        <div className="clickbox-container">
+          <ClickBox visible={true} clicked={boxClicked}/>
+          <Result visible={resultVisible} closeResult={closeResult} results={results}></Result>
+        </div>
+      </>
+    );
+  } else if (siteType === "LeaderboardSite"){
+    return (
+      <>
+        <Heading measureSwitch={measureSwitch} siteTypeSwitch={siteTypeSwitch}/>
+      </>
+    );
+  } else if (siteType === "SettingsSite"){
+    return (
+      <>
+        <Heading measureSwitch={measureSwitch} siteTypeSwitch={siteTypeSwitch}/>
+      </>
+    );
+  } else if (siteType === "AboutSite"){
+    return (
+      <>
+        <Heading measureSwitch={measureSwitch} siteTypeSwitch={siteTypeSwitch}/>
+      </>
+    );
+  }
+  
 }
 
 export default App

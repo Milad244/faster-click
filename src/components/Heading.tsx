@@ -1,15 +1,35 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+import { useState } from 'react';
+import { measureMode, siteType } from '../App';
+
+/* MIGHT ADD BACK BUT PROB NOT
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClock } from '@fortawesome/free-solid-svg-icons';
+<FontAwesomeIcon icon={faClock} className="nav-icons"/>
 import { faArrowPointer } from '@fortawesome/free-solid-svg-icons';
-import { faCrosshairs } from '@fortawesome/free-solid-svg-icons';
+<FontAwesomeIcon icon={faArrowPointer} className="nav-icons"/>
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+<FontAwesomeIcon icon={faGear} className="nav-icons"/>
+*/
 
 interface headingProps{
-    measureSwitch: (measure: "Timed" | "Clicks") => void;
+    measureSwitch: (measure: measureMode) => void;
+    siteTypeSwitch: (siteType: siteType) => void;
 }
 
-const Heading = ({measureSwitch}: headingProps) => {
+const Heading = ({measureSwitch, siteTypeSwitch}: headingProps) => {
+    const [activeLink, setActiveLink] = useState<siteType>('TimedSite');
+
+    const handleLinkClick = (link: siteType, measure?: measureMode) => {
+        setActiveLink(link);
+        siteTypeSwitch(link);
+        if (measure) measureSwitch(measure);
+    }
+
+    const isActiveLink = (link: siteType) => activeLink === link ? 'active' : '';
+
     return (
         <header>
             <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -20,10 +40,11 @@ const Heading = ({measureSwitch}: headingProps) => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav">
-                    <a className="nav-link active" onClick={() => {measureSwitch("Timed")}}>Timed<FontAwesomeIcon icon={faClock} className="nav-icons"/></a>
-                    <a className="nav-link" onClick={() => {measureSwitch("Clicks")}}>Clicks<FontAwesomeIcon icon={faArrowPointer} className="nav-icons"/></a>
-                    <a className="nav-link">Competitive<FontAwesomeIcon icon={faCrosshairs} className="nav-icons"/></a>
-                    <a className="nav-link">About</a>
+                    <a className={`nav-link ${isActiveLink('TimedSite')}`} onClick={() => {handleLinkClick("TimedSite", "Timed")}}>Timed</a>
+                    <a className={`nav-link ${isActiveLink('ClickSite')}`} onClick={() => {handleLinkClick("ClickSite", "Clicks")}}>Clicks</a>
+                    <a className={`nav-link ${isActiveLink('LeaderboardSite')}`} onClick={() => {handleLinkClick("LeaderboardSite")}}>Leaderboard</a>
+                    <a className={`nav-link ${isActiveLink('SettingsSite')}`} onClick={() => {handleLinkClick("SettingsSite")}}>Settings</a>
+                    <a className={`nav-link ${isActiveLink('AboutSite')}`} onClick={() => {handleLinkClick("AboutSite")}}>About</a>
                 </div>
                 </div>
             </div>

@@ -1,7 +1,16 @@
 # Faster Click
 
-Website: https://milad244.github.io/faster-click/ 
+## Access
+Website: https://milad244.github.io/faster-click/
 
-Faster Click: This project is a website where you can practice your clicking speed and accuracy. In addition, cool statistics of your improvement, competitive modes, and leaderboards will be there.  
+## Description
+Faster Click is a website where you can practice your clicking speed and accuracy. In addition, cool statistics of your improvement, different modes, and leaderboards will be there.
 
-Tools used for this project: React, TS, Bootstrap
+## Status
+Incomplete (high chance of returning to this project). 2024-06-26 to 2024-07-17.
+
+## Tools Used
+- React TS
+- Bootstrap
+- HTML
+- CSS
